@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Escolha um CFOP</h2>
+<mat-dialog-content>
+    <mat-form-field style="width: 100%;" class="example-chip-list" appearance="fill">
+        <mat-label>CFOP's favoritos</mat-label>
+        <mat-chip-list [(ngModel)]="cfopSelecionado" #chipList aria-label="Seleção de CFOP's">
+            <mat-chip #matChip [matTooltip]="cfop.descr" [value]="cfop.id" *ngFor="let cfop of cfops" (removed)="remove(cfop)">
+                {{cfop.codigo}}
+                <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+            </mat-chip>
+            <input placeholder="Novo CFOP..." #cfopInput [formControl]="cfopCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let cfop of filteredCFOPs | async" [value]="cfop.codigo">
+                {{cfop.codigo}} - {{cfop.descr}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-button (click)="close()">OK</button>
+</mat-dialog-actions>

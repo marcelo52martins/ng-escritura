@@ -1,0 +1,48 @@
+.primeira-linha {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+mat-form-field.referencia {
+    width: 100px;
+}
+
+mat-form-field {
+    margin-right: 8px;
+}
+
+table.tabela-principal {
+    width: 100%;
+}
+
+td.celula-principal:first-child {
+    width: 100px;
+}
+
+td.celula-principal:nth-of-type(2) {
+    width: 450px;
+}
+
+tr.example-detail-row {
+    height: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+td.valor {
+    text-align: right;
+}
+
+.file-input {
+    display: none;
+}

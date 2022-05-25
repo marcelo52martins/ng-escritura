@@ -1,0 +1,21 @@
+<table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let cfop"> {{cfop.codigo}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="descr">
+        <th mat-header-cell *matHeaderCellDef> Descrição </th>
+        <td mat-cell *matCellDef="let cfop"> {{cfop.descr}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nota">
+        <th mat-header-cell *matHeaderCellDef> Nota Explicativa </th>
+        <td mat-cell *matCellDef="let cfop"> {{cfop.nota}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+
+</table>

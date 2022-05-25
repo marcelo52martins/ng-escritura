@@ -1,0 +1,20 @@
+.primeira-linha {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+mat-form-field.referencia {
+    width: 100px;
+}
+
+mat-form-field {
+    margin-right: 8px;
+}
+
+button,
+.relatorio {
+    margin-left: 20px;
+}

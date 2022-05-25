@@ -1,0 +1,140 @@
+<div class="primeira-linha">
+
+    <mat-form-field class="range">
+        <mat-label>Filtro Período</mat-label>
+        <mat-date-range-input [formGroup]="periodo" [rangePicker]="picker2">
+            <input matStartDate formControlName="inicio">
+            <input matEndDate formControlName="fim">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    </mat-form-field>
+    <mat-date-range-picker #picker2></mat-date-range-picker>
+
+    <mat-form-field class="referencia">
+        <mat-label>Data Referência</mat-label>
+        <input [formControl]="referenciaControl" matInput [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    </mat-form-field>
+    <mat-datepicker #picker></mat-datepicker>
+
+    <input type="file" class="file-input" accept="application/xml" (change)="onFileSelected($event)" multiple #fileUpload>
+    <div class="file-upload">
+        <button matTooltip="Importar arquivos xml" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+            
+     <mat-icon>attach_file</mat-icon>
+     
+ </button>
+    </div>
+</div>
+<table class="tabela-principal" mat-table [dataSource]="dataSource" multiTemplateDataRows>
+    <ng-container matColumnDef="chave">
+        <th mat-header-cell *matHeaderCellDef> chave </th>
+        <td class="celula-principal" mat-cell *matCellDef="let entrada"> {{entrada.chave}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="emissao">
+        <th mat-header-cell *matHeaderCellDef> Emissão </th>
+        <td class="celula-principal" mat-cell *matCellDef="let entrada"> {{entrada.dataEmissao | date : 'shortDate'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="emitente">
+        <th mat-header-cell *matHeaderCellDef> Emitente </th>
+        <td mat-cell *matCellDef="let entrada"> {{entrada.emitente}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr class="example-element-row" mat-row *matRowDef="let myRowData; columns: columnsToDisplay" (click)="expandedElement = expandedElement === myRowData ? null : myRowData"></tr>
+
+    <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <div>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>Total NF</th>
+                                <th>Base ICMS</th>
+                                <th>Valor ICMS</th>
+                                <th>Desconto</th>
+                                <th>Despesas Acessórias</th>
+                                <th>ICMS ST</th>
+                                <th>IPI</th>
+                            </tr>
+                            <tr>
+                                <td class="valor">{{element.valorTotalNf | number : '1.2-2'}}</td>
+                                <td class="valor">{{element.baseICMS| number : '1.2-2'}}</td>
+                                <td class="valor">{{element.valorICMS| number : '1.2-2'}}</td>
+                                <td class="valor">{{element.desconto| number : '1.2-2'}}</td>
+                                <td class="valor">{{element.despesasAcessorias| number : '1.2-2'}}</td>
+                                <td class="valor">{{element.icmsst| number : '1.2-2'}}</td>
+                                <td class="valor">{{element.ipi| number : '1.2-2'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>CFOP</th>
+                                <th>Valor Contábil</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr *ngFor="let detalhe of element.detalhes">
+                                <td>{{detalhe.cfop}}</td>
+                                <td class="valor">{{detalhe.valorContabil | number : '1.2-2'}}</td>
+                                <td>
+                                    <mat-slide-toggle [(ngModel)]="detalhe.comCredito">Com crédito</mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <mat-slide-toggle [(ngModel)]="detalhe.outras">Outras</mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <mat-slide-toggle [(ngModel)]="detalhe.descontoCondicional">Desconto Condicional</mat-slide-toggle>
+                                </td>
+                                <td [matTooltip]="getDescrCfopById(detalhe.cfopEntradaId)">
+                                    {{getCodigoCfopById(detalhe.cfopEntradaId)}}
+                                </td>
+                                <td>
+                                    <button mat-raised-button color="primary" (click)="classificar(detalhe)">classificar</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>Referência</th>
+                                <th>CFOP</th>
+                                <th>Valor Contábil</th>
+                                <th>Base de Cálculo</th>
+                                <th>Imposto</th>
+                                <th>IsentasNT</th>
+                                <th>Outras</th>
+                                <th>Substituto</th>
+                                <th>Substituído</th>
+                                <th>Outros Imp</th>
+                                <th></th>
+                            </tr>
+                            <tr *ngFor="let lcto of element.lancamentosCFOPs">
+                                <td>{{lcto.referencia}}</td>
+                                <td>{{lcto.cfop}}</td>
+                                <td class="valor">{{lcto.valorContabil | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.baseCalculo | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.impostoCreditado | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.isentasNT | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.outras | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.substituto | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.substituido | number : '1.2-2'}}</td>
+                                <td class="valor">{{lcto.outrosImpostos | number : '1.2-2'}}</td>
+                                <td> <button (click)="excluirLctoCfop(lcto.id, element.id)" mat-icon-button><mat-icon>delete</mat-icon></button> </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>

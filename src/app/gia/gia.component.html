@@ -1,0 +1,17 @@
+<div class="primeira-linha">
+    <mat-form-field class="referencia">
+        <mat-label>Data Referência</mat-label>
+        <input [formControl]="referenciaControl" matInput [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    </mat-form-field>
+    <mat-datepicker #picker></mat-datepicker>
+</div>
+<button (click)="gerarRelatorio()" mat-raised-button>GERAR RELATÓRIO</button>
+
+<div class="relatorio">
+    <code>
+        <pre>
+{{relatorio}}
+        </pre>
+    </code>
+</div>
